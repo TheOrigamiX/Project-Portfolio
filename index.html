@@ -46,6 +46,7 @@ a{color:inherit;text-decoration:none}
 .tt{position:absolute;top:13cqw;left:6cqw;right:6cqw;text-align:center;font:700 12cqw/1.3 "Noto Serif Thai",Georgia,serif}
 .tt small{display:block;font:600 3.6cqw/1.4 var(--sans);letter-spacing:.18em;margin-top:1cqw}
 .art{position:absolute;left:8cqw;top:60cqw;width:84cqw;height:110cqw}
+img.art{object-fit:cover;mix-blend-mode:multiply;filter:grayscale(1) contrast(1.15)}
 .bd{position:absolute;right:8cqw;bottom:5cqw;font:600 4cqw var(--sans);border:.5cqw solid;padding:.8cqw 2.4cqw;letter-spacing:.1em}
 .sic{position:absolute;left:25%;top:8cqw;width:50%;aspect-ratio:1;background:var(--a2);border-radius:50%}
 .s1{border-radius:20%}.s2{border-radius:0;clip-path:polygon(50% 0,100% 100%,0 100%)}.s3{border-radius:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
@@ -122,15 +123,18 @@ tfoot td{font-weight:600;color:var(--ac);border:0}
 <div class="dt" id="dt"><button class="cl lbl box" id="cl">Close / ปิด</button><div class="dbr lbl">Nanthapop Nupradub —— Portfolio</div><div class="lc" id="lc"></div><div class="pst" id="pst"></div></div>
 <div class="cur" id="cur"><i class="rg"></i><i class="dp"></i><span class="ol">OPEN<br>เปิด</span></div>
 <div class="grain"></div>
+<script src="content/tapes.js"></script>
 <script>
 const E="cubic-bezier(.2,.8,.2,1)",RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
-const D=[
-{t:"แนะนำตัว",e:"Introduction",j:"自己紹介",y:"01",g:"Profile",k:0,n:"Intro",m:"สวัสดีครับ ผมชื่อ Nanthapop Nupradub (Boat) สนใจเข้าคณะวิศวกรรมคอมพิวเตอร์ ส่วนผลงานที่นำมาโชว์เป็นเครื่องบินพลังยางที่ผมออกแบบ สร้าง และส่งแข่งขัน (ข้อความตัวอย่าง แก้ได้)"},
-{t:"ผลการเรียน",e:"Transcript",j:"成績",y:"02",g:"Grades",k:1,n:"Grades",m:"ผลการเรียน 5 ภาคเรียน ช่องสีเขียวคือวิชาที่ได้ 4 (ตัวเลขตัวอย่าง รอใส่ข้อมูลจาก ปพ.1)"},
-...[1,2,3,4].map(i=>({t:"เครื่องบินพลังยาง #"+i,e:"Rubber plane "+i,j:"ゴム動力機",y:"0"+(i+2),g:"Work",k:2,n:"Work "+i,m:"คำอธิบายผลงานชิ้นที่ "+i+" (ข้อความตัวอย่าง) ใส่ชื่อรุ่น วัสดุ ผลการแข่งขัน และรูปจริงตรงนี้"}))];
-const N=D.length,M=N*3,P=1400,$=q=>document.querySelector(q);
+const SAMPLE=[
+{type:"intro",title:"แนะนำตัว",en:"Introduction",jp:"自己紹介",tag:"Profile",label:"Intro",text:"สวัสดีครับ ผมชื่อ Nanthapop Nupradub (Boat) สนใจเข้าคณะวิศวกรรมคอมพิวเตอร์ ส่วนผลงานที่นำมาโชว์เป็นเครื่องบินพลังยางที่ผมออกแบบ สร้าง และส่งแข่งขัน (ข้อความตัวอย่าง แก้ได้)"},
+{type:"grades",title:"ผลการเรียน",en:"Transcript",jp:"成績",tag:"Grades",label:"Grades",text:"ผลการเรียน 5 ภาคเรียน ช่องสีเขียวคือวิชาที่ได้ 4 (ตัวเลขตัวอย่าง รอใส่ข้อมูลจาก ปพ.1)",grades:{terms:["เทอม 1","เทอม 2","เทอม 3","เทอม 4","เทอม 5"],rows:[["คณิตศาสตร์",[4,3.5,4,4,4]],["ฟิสิกส์",[3.5,4,4,4,3.5]],["เคมี",[4,4,3.5,4,4]],["อังกฤษ",[3.5,3.5,4,3.5,4]],["ภาษาไทย",[4,4,4,4,3.5]]],gpa:[3.6,3.72,3.85,3.9,3.8]}},
+...[1,2,3,4].map(i=>({type:"work",title:"เครื่องบินพลังยาง #"+i,en:"Rubber plane "+i,jp:"ゴム動力機",tag:"Work",label:"Work "+i,text:"คำอธิบายผลงานชิ้นที่ "+i+" (ข้อความตัวอย่าง) ใส่ชื่อรุ่น วัสดุ ผลการแข่งขัน และรูปจริงตรงนี้",specs:[["ปีกกว้าง","60 ซม."],["น้ำหนัก","18 กรัม"],["เวลาบินนานสุด","42 วินาที"],["วัสดุ","บัลซา + ฟิล์ม"]]}))];
+const RAW=(window.TAPES&&window.TAPES.length)?window.TAPES:SAMPLE;
+const D=RAW.map((r,i)=>({t:r.title,e:r.en||"",j:r.jp||"",y:String(i+1).padStart(2,"0"),g:r.tag||"",k:{intro:0,grades:1,work:2}[r.type]??2,n:r.label||r.title,m:r.text||"",img:r.image||"",specs:r.specs||[],gr:r.grades||null}));
+const N=D.length,M=N*Math.max(3,Math.ceil(18/N)),P=1400,$=q=>document.querySelector(q);
 const sm=x=>x*x*(3-2*x),sg=Math.sign;
-const art=i=>{const k=D[i].k;let b=`<circle cx="42" cy="${k==2?46:40}" r="${k==2?20:26}" fill="var(--a2)"/>`;
+const art=i=>{if(D[i].img)return`<img class="art" src="${D[i].img}" alt="">`;const k=D[i].k;let b=`<circle cx="42" cy="${k==2?46:40}" r="${k==2?20:26}" fill="var(--a2)"/>`;
 if(k==1)b+=[30,38,44,52,60].map((h,n)=>`<rect x="${8+n*15}" y="${100-h}" width="11" height="${h}" fill="${n%2?"var(--a2)":"currentColor"}"/>`).join("");
 else b+=`<path transform="rotate(${-30+i*12} 42 60)" d="M8 60 L76 30 L52 80 L44 58Z" fill="currentColor"/>`;
 return`<svg class="art" viewBox="0 0 84 110"><path d="M0 104H84M0 98H84" stroke="currentColor" stroke-width=".8"/>${b}</svg>`};
@@ -182,7 +186,7 @@ function sw(el,html,dir,first){const n=document.createElement("span");n.innerHTM
 if(first||RM){[...el.children].slice(0,-1).forEach(o=>o.remove());return}
 [...el.children].forEach(o=>{if(o===n)o.animate([{transform:`translateY(${dir*105}%)`},{transform:"none"}],{duration:650,easing:E,fill:"both"});
 else{const a=o.animate([{transform:getComputedStyle(o).transform},{transform:`translateY(${-dir*105}%)`}],{duration:650,easing:E,fill:"both"});a.onfinish=()=>o.remove()}})}
-function setCap(i,dir,first){const d=D[i];sw($("#c1"),d.t,dir,first);sw($("#c2"),d.e+" / "+d.j,dir,first);sw($("#c3"),d.y+" — "+d.g,dir,first)}
+function setCap(i,dir,first){const d=D[i];sw($("#c1"),d.t,dir,first);sw($("#c2"),d.e+(d.j?" / "+d.j:""),dir,first);sw($("#c3"),d.y+" — "+d.g,dir,first)}
 const cur=$("#cur");
 function loop(t){const dt=Math.min(.05,(t-last)/1e3);last=t;const intro=t<introEnd;
 s+=(tg-s)*(RM?1:1-Math.exp(-(drag?18:intro?2.2:5.2)*dt));if(Math.abs(tg-s)<.0005)s=tg;
@@ -212,19 +216,18 @@ let wt;shelf.addEventListener("wheel",e=>{if(open)return;e.preventDefault();cons
 addEventListener("keydown",e=>{if(e.key==="Escape"&&open)closeD();else if(open)return;
 else if(e.key==="ArrowLeft")step(-1);else if(e.key==="ArrowRight")step(1);else if(e.key==="Enter")openD()});
 const dt=$("#dt"),lc=$("#lc"),pst=$("#pst");let cir=[];
-const GS=[3.6,3.72,3.85,3.9,3.8],SUB=["คณิตศาสตร์","ฟิสิกส์","เคมี","อังกฤษ","ภาษาไทย"],GR=[[4,3.5,4,4,4],[3.5,4,4,4,3.5],[4,4,3.5,4,4],[3.5,3.5,4,3.5,4],[4,4,4,4,3.5]];
 function fill(i){const d=D[i],ln=h=>`<div class="ln2"><div>${h}</div></div>`;let x="";
-if(d.k==1){const pts=GS.map((g,n)=>`${10+n*70},${54-(g-3.5)/.5*44}`).join(" ");
-x=ln(`<div style="display:flex;align-items:center;gap:18px"><span class="big">${(GS.reduce((a,b)=>a+b)/5).toFixed(2)}</span><span class="d2">GPAX<br>ตัวอย่าง</span><svg width="300" height="64" viewBox="0 0 300 64" style="margin-left:auto"><polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2"/>${pts.split(" ").map(p=>`<circle cx="${p.split(",")[0]}" cy="${p.split(",")[1]}" r="4" fill="var(--ac)"/>`).join("")}</svg></div>`)+
-ln(`<table><thead><tr><th>วิชา</th>${[1,2,3,4,5].map(n=>`<th>เทอม ${n}</th>`).join("")}</tr></thead><tbody>${SUB.map((s,r)=>`<tr><td>${s}</td>${GR[r].map(g=>`<td${g==4?' class="hi"':""}>${g}</td>`).join("")}</tr>`).join("")}</tbody><tfoot><tr><td>GPA</td>${GS.map(g=>`<td>${g.toFixed(2)}</td>`).join("")}</tr></tfoot></table>`)}
-if(d.k==2)x=ln(`<div class="spc"><div><small>ปีกกว้าง</small><b>60 ซม.</b></div><div><small>น้ำหนัก</small><b>18 กรัม</b></div><div><small>เวลาบินนานสุด</small><b>42 วินาที</b></div><div><small>วัสดุ</small><b>บัลซา + ฟิล์ม</b></div></div>`);
-lc.innerHTML=ln(`<span class="lbl" style="color:var(--ac)">${d.e} / ${d.j}</span>`)+ln(`<h2 class="d1">${d.t}</h2>`)+ln(`<span class="d2">${d.y} / ${d.g}</span>`)+ln(`<p class="d3">${d.m}</p>`)+x+ln(`<span class="d4">Written and directed by Nanthapop Nupradub${d.k==2?" · ค่าสเปกเป็นตัวอย่าง":""}</span>`);
+if(d.gr){const G=d.gr,gp=G.gpa||[],mn=Math.min(...gp),mx2=Math.max(...gp),pts=gp.map((g,n)=>`${10+n*(280/Math.max(1,gp.length-1))},${54-(g-mn)/((mx2-mn)||1)*44}`).join(" ");
+if(gp.length)x+=ln(`<div style="display:flex;align-items:center;gap:18px"><span class="big">${(gp.reduce((a,b)=>a+b,0)/gp.length).toFixed(2)}</span><span class="d2">GPAX</span><svg width="300" height="64" viewBox="0 0 300 64" style="margin-left:auto"><polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2"/>${pts.split(" ").map(p=>`<circle cx="${p.split(",")[0]}" cy="${p.split(",")[1]}" r="4" fill="var(--ac)"/>`).join("")}</svg></div>`);
+x+=ln(`<table><thead><tr><th>วิชา</th>${G.terms.map(n=>`<th>${n}</th>`).join("")}</tr></thead><tbody>${G.rows.map(r=>`<tr><td>${r[0]}</td>${r[1].map(g=>`<td${parseFloat(g)>=4?' class="hi"':""}>${g}</td>`).join("")}</tr>`).join("")}</tbody>${gp.length?`<tfoot><tr><td>GPA</td>${gp.map(g=>`<td>${g.toFixed(2)}</td>`).join("")}</tr></tfoot>`:""}</table>`)}
+if(d.specs.length)x+=ln(`<div class="spc">${d.specs.map(s=>`<div><small>${s[0]}</small><b>${s[1]}</b></div>`).join("")}</div>`);
+lc.innerHTML=ln(`<span class="lbl" style="color:var(--ac)">${d.e}${d.j?" / "+d.j:""}</span>`)+ln(`<h2 class="d1">${d.t}</h2>`)+ln(`<span class="d2">${d.y} / ${d.g}</span>`)+ln(`<p class="d3">${d.m}</p>`)+x+ln(`<span class="d4">Written and directed by Nanthapop Nupradub</span>`);
 const C=[[150,330,0],[340,600,120],[250,120,220],[90,760,300],[400,250,360],[260,860,420],[230,470,180]];
 pst.innerHTML=`<div class="in ${pal(i)}" style="border-radius:0">${cover(i)}</div><svg viewBox="0 0 474 900" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%"><defs><filter id="ik" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1100" height="1500"><feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="120" xChannelSelector="R" yChannelSelector="G"/></filter><mask id="mk" maskUnits="userSpaceOnUse" x="0" y="0" width="474" height="900"><rect width="474" height="900" fill="#fff"/><g filter="url(#ik)" fill="#000">${C.map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="0"/>`).join("")}</g></mask></defs><rect width="474" height="900" style="fill:var(--sheet)" mask="url(#mk)"/></svg>`;
-cir=[...pst.querySelectorAll("circle")].map((c,n)=>({c,dl:C[n][2]}))}
+cir=[...pst.querySelectorAll("mask g circle")].map((c,n)=>({c,dl:C[n][2]}))}
 function ink(t0){const t=performance.now()-t0;let go=false;cir.forEach(o=>{const p=Math.min(1,Math.max(0,(t-520-o.dl)/1250));o.c.setAttribute("r",720*(1-Math.pow(1-p,3)));if(p<1)go=true});if(go&&open)requestAnimationFrame(()=>ink(t0))}
 function rect(){const r=tapes[vAct()].children[1].getBoundingClientRect();return`inset(${r.top}px ${innerWidth-r.right}px ${innerHeight-r.bottom}px ${r.left}px round 3px)`}
-function openD(){if(open)return;open=true;s=tg=Math.round(tg);render(0);const i=((Math.round(s)%N)+N)%N;fill(i);
+function openD(){if(open)return;s=tg=Math.round(tg);render(0);const i=((Math.round(s)%N)+N)%N;fill(i);open=true;
 const from=rect();dt.style.display="grid";
 dt.animate([{clipPath:from},{clipPath:"inset(0 round 0)"}],{duration:RM?1:1050,easing:"cubic-bezier(.76,0,.18,1)",fill:"both"});
 dt.querySelectorAll(".ln2>*").forEach((n,k)=>n.animate([{transform:"translateY(110%)"},{transform:"none"}],{duration:RM?1:900,delay:RM?0:620+k*75,easing:E,fill:"both"}));
