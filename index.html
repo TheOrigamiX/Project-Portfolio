@@ -137,6 +137,27 @@ tfoot td{font-weight:600;color:var(--ac);border:0}
 .mq span.r{-webkit-text-stroke:0;color:var(--ac);opacity:.14}
 .spc>div{padding:12px 14px;background:rgba(255,255,255,.35);border-radius:6px;transition:transform .45s var(--ease);transform-style:preserve-3d}
 .spc>div:hover{transform:perspective(600px) rotateY(12deg) rotateX(-7deg) translateZ(24px)}
+.dbg{position:fixed;inset:0;pointer-events:none;z-index:0}.dbg i{position:absolute;display:block;opacity:.5}
+.rib{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}.rib path{fill:none;stroke:var(--ac);stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke;opacity:.55}
+.hud{position:fixed;top:calc(30px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:12px;align-items:center;color:var(--ac);font:600 11px var(--sans);letter-spacing:.2em}
+.hud .rec{width:10px;height:10px;border-radius:50%;background:#e23;animation:bk 1s steps(2) infinite}@keyframes bk{50%{opacity:0}}.hud em{font-style:normal;opacity:.7}
+.lc,.mq,.end,.csw{position:relative;z-index:1}
+.csw{grid-column:1/-1;height:74vh;display:grid;place-items:center;perspective:1100px}
+.cs{position:relative;width:min(78vw,430px);height:min(48vw,265px);transform-style:preserve-3d;transform:rotateX(-10deg) rotateY(-50deg)}
+.cs>b{position:absolute;display:block;background:var(--fg)}
+.cs .f0,.cs .f1{inset:0;border-radius:14px;background:var(--bg);border:3px solid var(--fg);box-sizing:border-box;backface-visibility:hidden}
+.cs .f0{transform:translateZ(26px)}.cs .f1{transform:rotateY(180deg) translateZ(26px)}
+.cs .sl,.cs .sr{top:0;left:0;width:52px;height:100%}.cs .sl{transform:translateX(-26px) rotateY(-90deg)}.cs .sr{left:auto;right:0;transform:translateX(26px) rotateY(90deg)}
+.cs .st,.cs .sb{left:0;top:0;width:100%;height:52px}.cs .st{transform:translateY(-26px) rotateX(90deg)}.cs .sb{top:auto;bottom:0;transform:translateY(26px) rotateX(-90deg)}
+.lab{position:absolute;left:8%;right:8%;top:9%;height:34%;background:var(--sheet);border-radius:5px;display:grid;place-items:center;font:700 clamp(14px,3.4vw,24px) "Noto Serif Thai",serif;color:var(--fg);text-align:center;text-decoration:none}
+.win{position:absolute;left:16%;right:16%;top:52%;height:34%;background:#15131c;border-radius:40px}
+.rls{position:absolute;top:50%;left:12%;width:min(11vw,52px);aspect-ratio:1;margin-top:calc(min(11vw,52px)/-2);border-radius:50%;border:5px solid var(--sheet);box-sizing:border-box;background:repeating-conic-gradient(var(--sheet) 0 22deg,transparent 22deg 60deg)}.rls.r2{left:auto;right:12%}
+.end{grid-column:1/-1;display:grid;justify-items:center;gap:28px;padding:10vh 0 16vh}
+.end b{font:800 min(18vw,190px)/1 "Inter Tight",sans-serif;color:var(--ac);text-shadow:5px 0 rgba(255,60,120,.4),-5px 0 rgba(0,190,255,.4);letter-spacing:-.03em}
+.gl2{stroke-dasharray:1;stroke-dashoffset:1;animation:dr2 1.6s 1s var(--ease) forwards}@keyframes dr2{to{stroke-dashoffset:0}}
+td{animation:pop .5s var(--ease) both;animation-delay:calc(.9s + var(--k,0)*60ms)}.spc>div{animation:pop .7s var(--ease) both;animation-delay:calc(1s + var(--k,0)*120ms)}
+@keyframes pop{from{transform:scale(.4) translateY(20px);opacity:0}}
+@media(max-width:767px){.csw{height:60vh}}
 @media(prefers-reduced-motion:reduce){#boot,.halo,.scan::after{display:none}.bl,.cf i{animation:none}}
 </style>
 </head>
@@ -154,7 +175,7 @@ tfoot td{font-weight:600;color:var(--ac);border:0}
 <button class="ar b" id="nx" aria-label="ถัดไป"><svg width="24" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M19 1l5 5-5 5M24 6H1"/></svg></button>
 <div class="tl" id="tl"><div class="ln"></div><div class="dot" id="dot"></div></div>
 <div class="ft lbl"><span>© Nanthapop Nupradub (Boat)</span><span>Portfolio</span></div>
-<div class="dt" id="dt"><button class="cl lbl box" id="cl">Close / ปิด</button><div class="dbr lbl">Nanthapop Nupradub —— Portfolio</div><div class="lc" id="lc"></div><div class="pst" id="pst"></div><div class="mq" id="mq"><span></span><br><span class="r"></span></div><div class="pgb" id="pgb"></div></div>
+<div class="dt" id="dt"><button class="cl lbl box" id="cl">Close / ปิด</button><div class="dbr lbl">Nanthapop Nupradub —— Portfolio</div><div class="lc" id="lc"></div><div class="pst" id="pst"></div><div class="csw"><div class="cs" id="cs"><b class="f0"><u class="lab" id="cl2"></u><u class="win"><u class="rls"></u><u class="rls r2"></u></u></b><b class="f1"></b><b class="sl"></b><b class="sr"></b><b class="st"></b><b class="sb"></b></div></div><div class="mq" id="mq"><span></span><br><span class="r"></span></div><div class="end" id="end"><b>THE END</b><button class="box lbl" id="nxt">NEXT TAPE &#9654; / ถัดไป</button></div><div class="pgb" id="pgb"></div><div class="dbg" id="dbg"></div><svg class="rib" viewBox="0 0 100 100" preserveAspectRatio="none"><path id="rp" d="M-5 85C15 5 35 115 55 45S90 95 105 15" pathLength="1"/></svg><div class="hud"><i class="rec"></i>REC<span id="tc">00:00:00</span><em>SP &#9654;</em></div></div>
 <div class="cur" id="cur"><i class="rg"></i><i class="dp"></i><span class="ol">OPEN<br>เปิด</span></div>
 <div class="grain"></div>
 <div class="scan"></div><div id="msg"></div>
@@ -261,16 +282,22 @@ shelf.addEventListener("pointercancel",()=>{drag=false;tg=Math.round(tg)});
 let wt;shelf.addEventListener("wheel",e=>{if(open)return;e.preventDefault();const d=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;tg+=d/(ws+gap)*.5;clearTimeout(wt);wt=setTimeout(()=>tg=Math.round(tg),160)},{passive:false});
 addEventListener("keydown",e=>{if(e.key==="Escape"&&open)closeD();else if(open)return;
 else if(e.key==="ArrowLeft")step(-1);else if(e.key==="ArrowRight")step(1);else if(e.key==="Enter")openD()});
-const dt=$("#dt"),lc=$("#lc"),pst=$("#pst"),mqS=[...document.querySelectorAll("#mq span")],pgb=$("#pgb");let cir=[],sk=0,lns=[];
-function sc(){sk=0;if(RM)return;const y=dt.scrollTop,p=y/Math.max(1,dt.scrollHeight-dt.clientHeight);pst.style.transform=`perspective(1200px) rotateY(${(p*36-12).toFixed(1)}deg) rotateX(${(4-p*8).toFixed(1)}deg)`;mqS[0].style.transform=`translate3d(${(-p*55).toFixed(1)}%,0,0)`;mqS[1].style.transform=`translate3d(${(p*55-55).toFixed(1)}%,0,0)`;pgb.style.transform=`scaleX(${p.toFixed(3)})`;lns.forEach((n,k)=>n.style.transform=`translateY(${(-p*(18+k*12)).toFixed(1)}px)`)}
+const dt=$("#dt"),lc=$("#lc"),pst=$("#pst"),mqS=[...document.querySelectorAll("#mq span")],pgb=$("#pgb"),cs=$("#cs"),rls=[...cs.querySelectorAll(".rls")],rp=$("#rp"),tcE=$("#tc"),dbg=$("#dbg");let cir=[],sk=0,lns=[],mpx=0,mpy=0,ended=0,tcT=0,t0o=0;
+for(let n=0;n<9;n++){const e=document.createElement("i"),z=24+n*9;e.style.cssText=`left:${(n*37)%92}%;top:${(n*53)%88}%;width:${z}px;height:${z}px;border:${3+n%3}px solid ${CF[n%6]};border-radius:${n%2?"50%":"4px"}`;dbg.append(e)}
+const tcf=()=>{const s=Math.floor((performance.now()-t0o)/1000);tcE.textContent=[s/3600,s/60%60,s%60].map(x=>String(Math.floor(x)).padStart(2,"0")).join(":")};
+dt.addEventListener("pointermove",e=>{mpx=e.clientX/innerWidth-.5;mpy=e.clientY/innerHeight-.5;if(!sk){sk=1;requestAnimationFrame(sc)}});
+$("#nxt").onclick=()=>{closeD();setTimeout(()=>{step(1);setTimeout(openD,1000)},900)};
+function sc(){sk=0;if(RM)return;const y=dt.scrollTop,p=y/Math.max(1,dt.scrollHeight-dt.clientHeight);pst.style.transform=`perspective(1200px) rotateY(${(p*36-12+mpx*16).toFixed(1)}deg) rotateX(${(4-p*8-mpy*12).toFixed(1)}deg)`;mqS[0].style.transform=`translate3d(${(-p*55).toFixed(1)}%,0,0)`;mqS[1].style.transform=`translate3d(${(p*55-55).toFixed(1)}%,0,0)`;pgb.style.transform=`scaleX(${p.toFixed(3)})`;lns.forEach((n,k)=>n.style.transform=`translateY(${(-p*(18+k*12)).toFixed(1)}px)`);
+cs.style.transform=`rotateX(${(-10+Math.sin(p*7)*16).toFixed(1)}deg) rotateY(${(p*600-50).toFixed(1)}deg)`;rls.forEach(r=>r.style.transform=`rotate(${(p*1800).toFixed(0)}deg)`);rp.style.strokeDashoffset=(1-p).toFixed(3);
+[...dbg.children].forEach((e,k)=>e.style.transform=`translateY(${(-p*(120+k*50)).toFixed(0)}px) rotate(${(p*(160+k*40)).toFixed(0)}deg)`);if(p>.96&&!ended){ended=1;burst(innerWidth/2,innerHeight*.6,60)}}
 dt.addEventListener("scroll",()=>{if(!sk){sk=1;requestAnimationFrame(sc)}},{passive:true});
 function fill(i){const d=D[i],ln=h=>`<div class="ln2"><div>${h}</div></div>`;let x="";
 if(d.gr){const G=d.gr,gp=G.gpa||[],mn=Math.min(...gp),mx2=Math.max(...gp),pts=gp.map((g,n)=>`${10+n*(280/Math.max(1,gp.length-1))},${54-(g-mn)/((mx2-mn)||1)*44}`).join(" ");
-if(gp.length)x+=ln(`<div style="display:flex;align-items:center;gap:18px"><span class="big">${(gp.reduce((a,b)=>a+b,0)/gp.length).toFixed(2)}</span><span class="d2">GPAX</span><svg width="300" height="64" viewBox="0 0 300 64" style="margin-left:auto"><polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2"/>${pts.split(" ").map(p=>`<circle cx="${p.split(",")[0]}" cy="${p.split(",")[1]}" r="4" fill="var(--ac)"/>`).join("")}</svg></div>`);
-x+=ln(`<table><thead><tr><th>วิชา</th>${G.terms.map(n=>`<th>${n}</th>`).join("")}</tr></thead><tbody>${G.rows.map(r=>`<tr><td>${r[0]}</td>${r[1].map(g=>`<td${parseFloat(g)>=4?' class="hi"':""}>${g}</td>`).join("")}</tr>`).join("")}</tbody>${gp.length?`<tfoot><tr><td>GPA</td>${gp.map(g=>`<td>${g.toFixed(2)}</td>`).join("")}</tr></tfoot>`:""}</table>`)}
-if(d.specs.length)x+=ln(`<div class="spc">${d.specs.map(s=>`<div><small>${s[0]}</small><b>${s[1]}</b></div>`).join("")}</div>`);
+if(gp.length)x+=ln(`<div style="display:flex;align-items:center;gap:18px"><span class="big">${(gp.reduce((a,b)=>a+b,0)/gp.length).toFixed(2)}</span><span class="d2">GPAX</span><svg width="300" height="64" viewBox="0 0 300 64" style="margin-left:auto"><polyline class="gl2" pathLength="1" points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2"/>${pts.split(" ").map(p=>`<circle cx="${p.split(",")[0]}" cy="${p.split(",")[1]}" r="4" fill="var(--ac)"/>`).join("")}</svg></div>`);
+x+=ln(`<table><thead><tr><th>วิชา</th>${G.terms.map(n=>`<th>${n}</th>`).join("")}</tr></thead><tbody>${G.rows.map(r=>`<tr><td>${r[0]}</td>${r[1].map((g,n)=>`<td style="--k:${n}"${parseFloat(g)>=4?' class="hi"':""}>${g}</td>`).join("")}</tr>`).join("")}</tbody>${gp.length?`<tfoot><tr><td>GPA</td>${gp.map(g=>`<td>${g.toFixed(2)}</td>`).join("")}</tr></tfoot>`:""}</table>`)}
+if(d.specs.length)x+=ln(`<div class="spc">${d.specs.map((s,n)=>`<div style="--k:${n}"><small>${s[0]}</small><b>${s[1]}</b></div>`).join("")}</div>`);
 lc.innerHTML=ln(`<span class="lbl" style="color:var(--ac)">${d.e}${d.j?" / "+d.j:""}</span>`)+ln(`<h2 class="d1">${chars(d.t)}</h2>`)+ln(`<span class="d2">${d.y} / ${d.g}</span>`)+ln(`<p class="d3">${d.m}</p>`)+x+ln(`<span class="d4">Written and directed by Nanthapop Nupradub</span>`);
-mqS.forEach(x=>x.innerHTML=(d.t+" · ").repeat(3));lns=[...lc.querySelectorAll(".ln2")];
+mqS.forEach(x=>x.innerHTML=(d.t+" · ").repeat(3));lns=[...lc.querySelectorAll(".ln2")];cs.className="cs "+pal(i);$("#cl2").innerHTML=d.t;
 const C=[[150,330,0],[340,600,120],[250,120,220],[90,760,300],[400,250,360],[260,860,420],[230,470,180]];
 pst.innerHTML=`<div class="in ${pal(i)}" style="border-radius:0">${cover(i)}</div>${LITE?"":`<svg viewBox="0 0 474 900" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%"><defs><filter id="ik" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1100" height="1500"><feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="120" xChannelSelector="R" yChannelSelector="G"/></filter><mask id="mk" maskUnits="userSpaceOnUse" x="0" y="0" width="474" height="900"><rect width="474" height="900" fill="#fff"/><g filter="url(#ik)" fill="#000">${C.map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="0"/>`).join("")}</g></mask></defs><rect width="474" height="900" style="fill:var(--sheet)" mask="url(#mk)"/></svg>`}`;
 cir=[...pst.querySelectorAll("mask g circle")].map((c,n)=>({c,dl:C[n][2]}))}
@@ -280,8 +307,9 @@ function openD(){if(open)return;poke();s=tg=Math.round(tg);render(0);const i=((M
 const from=rect();burst(innerWidth/2,CYS);dt.style.display="grid";
 dt.animate([{clipPath:from},{clipPath:"inset(0 round 0)"}],{duration:RM?1:1050,easing:"cubic-bezier(.76,0,.18,1)",fill:"both"});
 dt.querySelectorAll(".ln2>*").forEach((n,k)=>n.animate([{transform:"translateY(110%)"},{transform:"none"}],{duration:RM?1:900,delay:RM?0:620+k*75,easing:E,fill:"both"}));
-if(RM)cir.forEach(o=>o.c.setAttribute("r",720));else ink(performance.now());dt.scrollTop=0;sc()}
-function closeD(){if(!open)return;poke();open=false;dt.getAnimations().forEach(a=>a.cancel());
+if(RM)cir.forEach(o=>o.c.setAttribute("r",720));else ink(performance.now());dt.scrollTop=0;mpx=mpy=0;t0o=performance.now();ended=0;clearInterval(tcT);tcT=setInterval(tcf,500);tcf();sc();
+const bg=lc.querySelector(".big");if(bg&&!RM){const v=parseFloat(bg.textContent),t1=performance.now();(function f(){const q=Math.min(1,(performance.now()-t1-900)/1400);bg.textContent=(v*sm(Math.max(0,q))).toFixed(2);if(q<1&&open)requestAnimationFrame(f)})()}}
+function closeD(){if(!open)return;poke();clearInterval(tcT);open=false;dt.getAnimations().forEach(a=>a.cancel());
 const a=dt.animate([{clipPath:"inset(0 round 0)"},{clipPath:rect()}],{duration:RM?1:850,easing:"cubic-bezier(.76,0,.18,1)",fill:"both"});
 a.onfinish=()=>{dt.style.display="none";dt.getAnimations().forEach(x=>x.cancel())}}
 $("#cl").onclick=closeD;
