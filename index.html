@@ -104,6 +104,12 @@ tfoot td{font-weight:600;color:var(--ac);border:0}
 .ar{top:auto;bottom:118px}.ar.a{left:30px}.ar.b{left:calc(100% - 30px)}
 .tl{left:16px;right:16px;bottom:54px}.tk.od b{display:none}.ft{left:16px;right:16px}
 .dt{grid-template-columns:1fr;padding:80px 6vw 40px}.pst{order:-1;height:46svh}.cl{left:16px}.dbr{display:none}}
+.lite .grain,.lite .cf i{animation:none}.lite .grain{display:none}
+.lite .bl{filter:none;animation:none;opacity:.7}
+.lite .b1{background:radial-gradient(circle,var(--pk) 0,transparent 68%)}.lite .b2{background:radial-gradient(circle,var(--lv) 0,transparent 68%)}.lite .b3{background:radial-gradient(circle,var(--mt) 0,transparent 68%)}.lite .b4{background:radial-gradient(circle,var(--bt) 0,transparent 68%)}
+.lite .in::before{background:linear-gradient(90deg,rgba(255,255,255,.4),transparent 14%,transparent 80%,rgba(0,0,0,.16))}
+.lite .cv{box-shadow:none}.lite img.art{mix-blend-mode:normal}
+#msg{position:fixed;inset:0;z-index:50;display:none;place-items:center;text-align:center;padding:24px;font:500 16px/1.7 var(--sans);color:var(--ac)}
 @media(prefers-reduced-motion:reduce){.bl,.cf i{animation:none}}
 </style>
 </head>
@@ -123,28 +129,32 @@ tfoot td{font-weight:600;color:var(--ac);border:0}
 <div class="dt" id="dt"><button class="cl lbl box" id="cl">Close / ปิด</button><div class="dbr lbl">Nanthapop Nupradub —— Portfolio</div><div class="lc" id="lc"></div><div class="pst" id="pst"></div></div>
 <div class="cur" id="cur"><i class="rg"></i><i class="dp"></i><span class="ol">OPEN<br>เปิด</span></div>
 <div class="grain"></div>
+<div id="msg"></div>
 <script src="content/tapes.js"></script>
 <script>
 const E="cubic-bezier(.2,.8,.2,1)",RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
-const SAMPLE=[
-{type:"intro",title:"แนะนำตัว",en:"Introduction",jp:"自己紹介",tag:"Profile",label:"Intro",text:"สวัสดีครับ ผมชื่อ Nanthapop Nupradub (Boat) สนใจเข้าคณะวิศวกรรมคอมพิวเตอร์ ส่วนผลงานที่นำมาโชว์เป็นเครื่องบินพลังยางที่ผมออกแบบ สร้าง และส่งแข่งขัน (ข้อความตัวอย่าง แก้ได้)"},
-{type:"grades",title:"ผลการเรียน",en:"Transcript",jp:"成績",tag:"Grades",label:"Grades",text:"ผลการเรียน 5 ภาคเรียน ช่องสีเขียวคือวิชาที่ได้ 4 (ตัวเลขตัวอย่าง รอใส่ข้อมูลจาก ปพ.1)",grades:{terms:["เทอม 1","เทอม 2","เทอม 3","เทอม 4","เทอม 5"],rows:[["คณิตศาสตร์",[4,3.5,4,4,4]],["ฟิสิกส์",[3.5,4,4,4,3.5]],["เคมี",[4,4,3.5,4,4]],["อังกฤษ",[3.5,3.5,4,3.5,4]],["ภาษาไทย",[4,4,4,4,3.5]]],gpa:[3.6,3.72,3.85,3.9,3.8]}},
-...[1,2,3,4].map(i=>({type:"work",title:"เครื่องบินพลังยาง #"+i,en:"Rubber plane "+i,jp:"ゴム動力機",tag:"Work",label:"Work "+i,text:"คำอธิบายผลงานชิ้นที่ "+i+" (ข้อความตัวอย่าง) ใส่ชื่อรุ่น วัสดุ ผลการแข่งขัน และรูปจริงตรงนี้",specs:[["ปีกกว้าง","60 ซม."],["น้ำหนัก","18 กรัม"],["เวลาบินนานสุด","42 วินาที"],["วัสดุ","บัลซา + ฟิล์ม"]]}))];
-const RAW=(window.TAPES&&window.TAPES.length)?window.TAPES:SAMPLE;
+const LITE=matchMedia("(pointer:coarse)").matches||innerWidth<768,FINE=matchMedia("(pointer:fine)").matches;
+document.documentElement.classList.toggle("lite",LITE);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const showMsg=m=>{const e=document.getElementById("msg");e.innerHTML=m;e.style.display="grid"};
+const clean=r=>({type:r.type||"work",title:esc(r.title||""),en:esc(r.en||""),jp:esc(r.jp||""),tag:esc(r.tag||""),label:esc(r.label||r.title||""),image:esc(r.image||""),
+text:String(r.text||"").split("\n\n").map(esc).join("<br><br>"),specs:(r.specs||[]).map(s=>[esc(s[0]),esc(s[1])]),
+grades:r.grades?{terms:(r.grades.terms||[]).map(esc),rows:(r.grades.rows||[]).map(x=>[esc(x[0]),x[1].map(v=>typeof v==="number"?v:esc(v))]),gpa:r.grades.gpa||[]}:null});
+function boot(RAW){
 const D=RAW.map((r,i)=>({t:r.title,e:r.en||"",j:r.jp||"",y:String(i+1).padStart(2,"0"),g:r.tag||"",k:{intro:0,grades:1,work:2}[r.type]??2,n:r.label||r.title,m:r.text||"",img:r.image||"",specs:r.specs||[],gr:r.grades||null}));
-const N=D.length,M=N*Math.max(3,Math.ceil(18/N)),P=1400,$=q=>document.querySelector(q);
+const N=D.length,NM=Math.max(1,N-1),M=N*Math.max(3,Math.ceil(18/N)),P=1400,$=q=>document.querySelector(q);
 const sm=x=>x*x*(3-2*x),sg=Math.sign;
-const art=i=>{if(D[i].img)return`<img class="art" src="${D[i].img}" alt="">`;const k=D[i].k;let b=`<circle cx="42" cy="${k==2?46:40}" r="${k==2?20:26}" fill="var(--a2)"/>`;
+const art=i=>{if(D[i].img)return`<img class="art" src="${D[i].img}" alt="" loading="lazy" decoding="async">`;const k=D[i].k;let b=`<circle cx="42" cy="${k==2?46:40}" r="${k==2?20:26}" fill="var(--a2)"/>`;
 if(k==1)b+=[30,38,44,52,60].map((h,n)=>`<rect x="${8+n*15}" y="${100-h}" width="11" height="${h}" fill="${n%2?"var(--a2)":"currentColor"}"/>`).join("");
-else b+=`<path transform="rotate(${-30+i*12} 42 60)" d="M8 60 L76 30 L52 80 L44 58Z" fill="currentColor"/>`;
+else b+=`<rect x="20" y="52" width="44" height="44" transform="rotate(${-14+i*9} 42 74)" fill="currentColor"/>`;
 return`<svg class="art" viewBox="0 0 84 110"><path d="M0 104H84M0 98H84" stroke="currentColor" stroke-width=".8"/>${b}</svg>`};
 const cover=i=>`<i class="ct">A NANTHAPOP NUPRADUB FILM</i><b class="tt">${D[i].t}<small>${D[i].e}</small></b>${art(i)}<u class="bd">VHS</u>`;
 const spine=i=>`<div class="sic s${i%4}"></div><div class="stk" style="--r:${[-8,6,-4,9,-10,5][i%6]}deg">No.${D[i].y}</div><div class="lb"></div><b class="stt" style="font-size:${Math.min(30,300/D[i].t.length)}cqw">${D[i].t}</b><b class="snm">BOAT</b><u class="svh">VHS</u>`;
 const pal=i=>"p"+(i%6);
 const st=$("#stage"),tapes=[],lift=new Array(M).fill(0);
 for(let v=0;v<M;v++){const i=v%N,e=document.createElement("div");e.className="tape";e.innerHTML=`<div class="sp"><div class="in ${pal(i)}">${spine(i)}</div></div><div class="cv"><div class="in ${pal(i)}">${cover(i)}</div></div>`;st.append(e);tapes.push(e)}
-const tl=$("#tl");
-D.forEach((d,i)=>{const t=document.createElement("div");t.className="tk"+(i==0?" f":i==N-1?" z":"")+(i%2?" od":"");t.style.left=i/(N-1)*100+"%";t.innerHTML=`<b>${d.n}</b>`;tl.insertBefore(t,$("#dot"))});
+const tl=$("#tl"),plyEl=$("#ply"),dotEl=$("#dot"),shelfEl=$("#shelf"),hid=[],lt=[],s0=[],s1=[];
+D.forEach((d,i)=>{const t=document.createElement("div");t.className="tk"+(i==0?" f":i==N-1?" z":"")+(i%2?" od":"");t.style.left=i/NM*100+"%";t.innerHTML=`<b>${d.n}</b>`;tl.insertBefore(t,$("#dot"))});
 const CF=["#EFA3B5","#8FCFB0","#B3A6E6","#F0CC66","#8FC0E6","#F3A97C"],cfs=[];
 let rs=7;const rnd=()=>(rs=(rs*9301+49297)%233280)/233280;
 for(let n=0;n<16;){const x=rnd()*94,y=rnd()*90;if(x>28&&x<72&&y>14&&y<66)continue;
@@ -153,10 +163,10 @@ s.style.cssText=`left:${x}%;top:${y}%;width:${z}px;height:${z}px`;s.dataset.d=(.
 i.style.cssText=`width:100%;height:100%;animation-delay:-${(rnd()*6).toFixed(1)}s;`+
 [`background:${c};border-radius:50%`,`border:${Math.max(3,z/6)}px solid ${c};border-radius:50%`,`background:${c};transform:rotate(18deg)`,`background:${c};border-radius:${z}px ${z}px 0 0;height:50%`,`background:linear-gradient(${c},${c}) 50% 50%/100% 28% no-repeat,linear-gradient(${c},${c}) 50% 50%/28% 100% no-repeat`][t];
 s.append(i);$("#cf").append(s);cfs.push(s);n++}
-let H,ws,dd,gap,U,XS,tg=N,s=tg-5,tx=0,ty=0,hov=-1,open=false,act=-1,drag=false,dotx=0,mx=innerWidth/2,my=innerHeight/2,last=performance.now(),onC=false,pt=document.body,cx=mx,cyy=my;
+let CYS=0,wake=0,H,ws,dd,gap,U,XS,tg=N,s=tg-5,tx=0,ty=0,hov=-1,open=false,act=-1,drag=false,dotx=0,mx=innerWidth/2,my=innerHeight/2,last=performance.now(),onC=false,pt=document.body,cx=mx,cyy=my;
 const t0g=performance.now(),introEnd=t0g+(RM?0:2800);if(RM)s=tg;
-const root=document.documentElement;
-function measure(){const p=document.createElement("div");p.style.cssText="position:absolute;visibility:hidden;height:var(--H)";document.body.append(p);H=p.getBoundingClientRect().height;p.remove();
+const root=document.documentElement,poke=()=>{wake=performance.now()+1600};
+function measure(){const sr=shelfEl.getBoundingClientRect();CYS=sr.top+sr.height/2;const p=document.createElement("div");p.style.cssText="position:absolute;visibility:hidden;height:var(--H)";document.body.append(p);H=p.getBoundingClientRect().height;p.remove();
 ws=H*142/840;dd=H*474/900;gap=H*.035;U=H*(innerWidth<768?1.05:1.3);
 root.style.setProperty("--ws",ws+"px");root.style.setProperty("--d",dd+"px");
 XS=[0];for(let u=0,a=0;u<3*U;u+=2){a+=2/(1+Math.pow(u/U,1.6));XS.push(a)}}
@@ -167,21 +177,23 @@ const F=r=>r*(ws+gap)+(dd-ws+1.4*gap)*B(r);
 const rel=v=>((v-s+M/2)%M+M)%M-M/2;
 const vAct=()=>((Math.round(s)%M)+M)%M;
 function render(dt){
-const sh=$("#shelf").getBoundingClientRect(),cy=sh.top+sh.height/2,W=innerWidth;
+const cy=CYS,W=innerWidth;
 onC=Math.abs(mx-W/2)<.55*dd&&Math.abs(my-cy)<.55*H&&Math.abs(tg-s)<.3&&!open;
 const ty2=onC?(mx-W/2)/(.55*dd)*8:(mx-W/2)/W*4,tx2=onC?-(my-cy)/(H/2)*5:0,ke=1-Math.exp(-7*dt);
 ty+=(ty2-ty)*ke;tx+=(tx2-tx)*ke;
 for(let v=0;v<M;v++){const el=tapes[v],r=rel(v),o=sm(Math.max(0,1-Math.abs(r))),u=F(r);
-if(Math.abs(u)>U*1.95){el.style.display="none";continue}el.style.display="";
+if(Math.abs(u)>U*1.95){if(!hid[v]){el.style.display="none";hid[v]=1}continue}if(hid[v]){el.style.display="";hid[v]=0}
 lift[v]+=((v===hov&&Math.abs(r)>.5?1:0)-lift[v])*(RM?1:1-Math.exp(-12*dt));
 const sc=scl(u),k=1/sc,z=P*(1-k)+o*H*.1,x=xsc(u)*k,y=(H*.5*(1-sc)*.42+o*H*.012-lift[v]*H*.05)*k;
 const ry=sg(u)*Math.min(1,Math.abs(u)/U)*26*(1-o)-90*o+ty*o;
-el.style.transform=`translate3d(${x}px,${y}px,${z}px) rotateX(${tx*o}deg) rotateY(${ry}deg)`;el.style.zIndex=Math.round(3000+z);
-el.children[0].style.setProperty("--shade",Math.min(.6,o*.55+(1-sc)*.32));
-el.children[1].style.setProperty("--shade",(1-o)*.82)}
+const tr=`translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,${z.toFixed(1)}px) rotateX(${(tx*o).toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+if(lt[v]!==tr){lt[v]=tr;el.style.transform=tr;el.style.zIndex=Math.round(3000+z)}
+const a0=Math.min(.6,o*.55+(1-sc)*.32).toFixed(3),a1=((1-o)*.82).toFixed(3);
+if(s0[v]!==a0){s0[v]=a0;el.children[0].style.setProperty("--shade",a0)}
+if(s1[v]!==a1){s1[v]=a1;el.children[1].style.setProperty("--shade",a1)}}
 const ps=open?0:sm(Math.max(0,1-Math.abs(tg-s)*3));
-$("#ply").style.transform=`translate(${W/2-dd/2-6}px,${cy+.36*H}px) scale(${ps})`;
-cfs.forEach(c=>{const d=+c.dataset.d;c.style.transform=`translate(${(mx-W/2)*d*.03}px,${(my-innerHeight/2)*d*.03}px)`})}
+plyEl.style.transform=`translate(${W/2-dd/2-6}px,${cy+.36*H}px) scale(${ps})`;
+if(!LITE)cfs.forEach(c=>{const d=+c.dataset.d;c.style.transform=`translate(${(mx-W/2)*d*.03}px,${(my-innerHeight/2)*d*.03}px)`})}
 function sw(el,html,dir,first){const n=document.createElement("span");n.innerHTML=html;el.append(n);
 if(first||RM){[...el.children].slice(0,-1).forEach(o=>o.remove());return}
 [...el.children].forEach(o=>{if(o===n)o.animate([{transform:`translateY(${dir*105}%)`},{transform:"none"}],{duration:650,easing:E,fill:"both"});
@@ -189,26 +201,27 @@ else{const a=o.animate([{transform:getComputedStyle(o).transform},{transform:`tr
 function setCap(i,dir,first){const d=D[i];sw($("#c1"),d.t,dir,first);sw($("#c2"),d.e+(d.j?" / "+d.j:""),dir,first);sw($("#c3"),d.y+" — "+d.g,dir,first)}
 const cur=$("#cur");
 function loop(t){const dt=Math.min(.05,(t-last)/1e3);last=t;const intro=t<introEnd;
+if(act>=0&&!intro&&!drag&&s===tg&&t>wake){requestAnimationFrame(loop);return}
 s+=(tg-s)*(RM?1:1-Math.exp(-(drag?18:intro?2.2:5.2)*dt));if(Math.abs(tg-s)<.0005)s=tg;
 const a=((Math.round(s)%N)+N)%N;if(a!==act&&!intro){setCap(a,act<0?1:sg(tg-s)||1,false);act=a}
-const target=(act<0?0:act)/(N-1)*100;dotx+=(target-dotx)*(RM?1:1-Math.exp(-14*dt));$("#dot").style.left=dotx+"%";
+const target=(act<0?0:act)/NM*100;dotx+=(target-dotx)*(RM?1:1-Math.exp(-14*dt));dotEl.style.left=dotx+"%";
 render(dt);
-const k=1-Math.exp(-16*dt);cx+=(mx-cx)*k;cyy+=(my-cyy)*k;cur.style.transform=`translate3d(${cx}px,${cyy}px,0)`;
+if(FINE){const k=1-Math.exp(-16*dt);cx+=(mx-cx)*k;cyy+=(my-cyy)*k;cur.style.transform=`translate3d(${cx}px,${cyy}px,0)`;
 const bt=pt.closest&&pt.closest("button,a,.tl,.ar");
-cur.className="cur"+(bt?" btn":onC?" open":(!open&&pt.closest&&pt.closest(".tape"))?" spine":"");
+cur.className="cur"+(bt?" btn":onC?" open":(!open&&pt.closest&&pt.closest(".tape"))?" spine":"")}
 requestAnimationFrame(loop)}
-const go=i=>{const c=((Math.round(tg)%N)+N)%N;tg=Math.round(tg)+((i-c+N/2)%N+N)%N-N/2};
-const step=n=>{tg=Math.round(tg)+n};
+const go=i=>{poke();const c=((Math.round(tg)%N)+N)%N;tg=Math.round(tg)+((i-c+N/2)%N+N)%N-N/2};
+const step=n=>{poke();tg=Math.round(tg)+n};
 $("#pv").onclick=()=>step(-1);$("#nx").onclick=()=>step(1);
-document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(+b.dataset.go));
+document.querySelectorAll("[data-go]").forEach(b=>{const i=D.findIndex(d=>d.k===+b.dataset.go);if(i<0)b.style.display="none";else b.onclick=()=>go(i)});
 $("#home").onclick=e=>{e.preventDefault();go(0)};
-tl.onclick=e=>{const r=tl.getBoundingClientRect();go(Math.round(Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*(N-1)))};
+tl.onclick=e=>{const r=tl.getBoundingClientRect();go(Math.round(Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*NM))};
 const shelf=$("#shelf");let dn=null,x0=0,t0=0,moved=false;
 shelf.addEventListener("pointerdown",e=>{if(open)return;dn=e.target.closest(".tape");x0=e.clientX;t0=tg;moved=false;drag=true;shelf.setPointerCapture(e.pointerId)});
 shelf.addEventListener("pointermove",e=>{if(drag){const dx=e.clientX-x0;if(Math.abs(dx)>5)moved=true;if(moved)tg=t0-dx/(ws+gap)}
 else{const t=e.target.closest(".tape");hov=t?tapes.indexOf(t):-1}});
 shelf.addEventListener("pointerleave",()=>{if(!drag)hov=-1});
-addEventListener("pointermove",e=>{mx=e.clientX;my=e.clientY;pt=e.target});
+addEventListener("pointermove",e=>{mx=e.clientX;my=e.clientY;pt=e.target;poke()});addEventListener("pointerdown",poke);addEventListener("keydown",poke);addEventListener("wheel",poke,{passive:true});
 shelf.addEventListener("pointerup",()=>{if(!drag)return;drag=false;if(moved){tg=Math.round(tg);return}
 if(dn){const v=tapes.indexOf(dn),r=rel(v);if(Math.abs(r)<.5)openD();else tg=Math.round(tg+r)}});
 shelf.addEventListener("pointercancel",()=>{drag=false;tg=Math.round(tg)});
@@ -223,21 +236,23 @@ x+=ln(`<table><thead><tr><th>วิชา</th>${G.terms.map(n=>`<th>${n}</th>`).
 if(d.specs.length)x+=ln(`<div class="spc">${d.specs.map(s=>`<div><small>${s[0]}</small><b>${s[1]}</b></div>`).join("")}</div>`);
 lc.innerHTML=ln(`<span class="lbl" style="color:var(--ac)">${d.e}${d.j?" / "+d.j:""}</span>`)+ln(`<h2 class="d1">${d.t}</h2>`)+ln(`<span class="d2">${d.y} / ${d.g}</span>`)+ln(`<p class="d3">${d.m}</p>`)+x+ln(`<span class="d4">Written and directed by Nanthapop Nupradub</span>`);
 const C=[[150,330,0],[340,600,120],[250,120,220],[90,760,300],[400,250,360],[260,860,420],[230,470,180]];
-pst.innerHTML=`<div class="in ${pal(i)}" style="border-radius:0">${cover(i)}</div><svg viewBox="0 0 474 900" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%"><defs><filter id="ik" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1100" height="1500"><feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="120" xChannelSelector="R" yChannelSelector="G"/></filter><mask id="mk" maskUnits="userSpaceOnUse" x="0" y="0" width="474" height="900"><rect width="474" height="900" fill="#fff"/><g filter="url(#ik)" fill="#000">${C.map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="0"/>`).join("")}</g></mask></defs><rect width="474" height="900" style="fill:var(--sheet)" mask="url(#mk)"/></svg>`;
+pst.innerHTML=`<div class="in ${pal(i)}" style="border-radius:0">${cover(i)}</div>${LITE?"":`<svg viewBox="0 0 474 900" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%"><defs><filter id="ik" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1100" height="1500"><feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="120" xChannelSelector="R" yChannelSelector="G"/></filter><mask id="mk" maskUnits="userSpaceOnUse" x="0" y="0" width="474" height="900"><rect width="474" height="900" fill="#fff"/><g filter="url(#ik)" fill="#000">${C.map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="0"/>`).join("")}</g></mask></defs><rect width="474" height="900" style="fill:var(--sheet)" mask="url(#mk)"/></svg>`}`;
 cir=[...pst.querySelectorAll("mask g circle")].map((c,n)=>({c,dl:C[n][2]}))}
 function ink(t0){const t=performance.now()-t0;let go=false;cir.forEach(o=>{const p=Math.min(1,Math.max(0,(t-520-o.dl)/1250));o.c.setAttribute("r",720*(1-Math.pow(1-p,3)));if(p<1)go=true});if(go&&open)requestAnimationFrame(()=>ink(t0))}
 function rect(){const r=tapes[vAct()].children[1].getBoundingClientRect();return`inset(${r.top}px ${innerWidth-r.right}px ${innerHeight-r.bottom}px ${r.left}px round 3px)`}
-function openD(){if(open)return;s=tg=Math.round(tg);render(0);const i=((Math.round(s)%N)+N)%N;fill(i);open=true;
+function openD(){if(open)return;poke();s=tg=Math.round(tg);render(0);const i=((Math.round(s)%N)+N)%N;fill(i);open=true;
 const from=rect();dt.style.display="grid";
 dt.animate([{clipPath:from},{clipPath:"inset(0 round 0)"}],{duration:RM?1:1050,easing:"cubic-bezier(.76,0,.18,1)",fill:"both"});
 dt.querySelectorAll(".ln2>*").forEach((n,k)=>n.animate([{transform:"translateY(110%)"},{transform:"none"}],{duration:RM?1:900,delay:RM?0:620+k*75,easing:E,fill:"both"}));
 if(RM)cir.forEach(o=>o.c.setAttribute("r",720));else ink(performance.now());dt.scrollTop=0}
-function closeD(){if(!open)return;open=false;dt.getAnimations().forEach(a=>a.cancel());
+function closeD(){if(!open)return;poke();open=false;dt.getAnimations().forEach(a=>a.cancel());
 const a=dt.animate([{clipPath:"inset(0 round 0)"},{clipPath:rect()}],{duration:RM?1:850,easing:"cubic-bezier(.76,0,.18,1)",fill:"both"});
 a.onfinish=()=>{dt.style.display="none";dt.getAnimations().forEach(x=>x.cancel())}}
 $("#cl").onclick=closeD;
-measure();addEventListener("resize",measure);
-requestAnimationFrame(loop);
+measure();addEventListener("resize",()=>{measure();poke()});
+requestAnimationFrame(loop)}
+if(window.TAPES&&window.TAPES.length)boot(window.TAPES.map(clean));
+else showMsg("ไม่พบเทป<br>ตรวจว่ามีไฟล์ content/tapes.js และมีไฟล์ .md ใน content/");
 </script>
 </body>
 </html>

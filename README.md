@@ -1,42 +1,47 @@
 # Nanthapop Nupradub — Portfolio
 
-Single-page portfolio styled as a curved VHS shelf. Plain HTML, CSS and JavaScript. One Markdown file in `content/` is one tape.
+พอร์ตโฟลิโอหน้าเดียว ธีมชั้นวางเทป VHS โค้ง ใช้ HTML, CSS, JavaScript ล้วน 1 ไฟล์ `.md` ในโฟลเดอร์ `content/` = 1 เทป
 
-## Add or edit a tape
+## เพิ่มหรือแก้เทป
 
-1. Copy any file in `content/` (for example `03-plane-1.md`) and rename it. The file name sets the order: `07-plane-5.md` goes after `06-...`.
-2. Edit the text and save.
-3. Push to GitHub. A GitHub Action rebuilds `content/tapes.js` and the shelf shows one tape per file.
+1. เปิดไฟล์ใน `content/` บน GitHub (กดไอคอนดินสอ) แก้ข้อความ แล้วกด Commit changes
+   เพิ่มเทปใหม่: คัดลอกไฟล์เดิมแล้วตั้งชื่อใหม่ ชื่อไฟล์กำหนดลำดับ เช่น `07-work-5.md` จะอยู่หลัง `06-...`
+2. GitHub Action จะสร้าง `content/tapes.js` ใหม่ให้เอง รอ 1-2 นาที
+3. ลบเทป: ลบไฟล์ | สลับลำดับ: เปลี่ยนเลขหน้าชื่อไฟล์
 
-To delete a tape, delete its file. To reorder, rename the files.
+ไม่ใช้ GitHub: รัน `python3 tools/build.py` หลังแก้ไฟล์ แล้วเปิด `index.html`
 
-Without GitHub, run `python3 tools/build.py` after any change, then open `index.html`.
-
-## File format
+## รูปแบบไฟล์
 
 ```
 ---
 type: work          # intro | grades | work
 title: ชื่อบนปก
 en: English title
-jp: 日本語            # optional
-tag: Work           # small label under the title
-label: Work 1       # label on the timeline
-image: images/plane1.jpg   # optional photo on the cover
+jp: 日本語            # ไม่ใส่ก็ได้
+tag: Work           # ป้ายเล็กใต้ชื่อ
+label: Work 1       # ป้ายบนไทม์ไลน์
+image: images/a.jpg # รูปบนปก ไม่ใส่ก็ได้
 ---
-Description text.
+ข้อความอธิบาย
 
-- ปีกกว้าง: 60 ซม.     # work: each "- name: value" line becomes a spec
+เว้นบรรทัดว่าง = ขึ้นย่อหน้าใหม่
+
+- ปี: 2568         # work: ทุกบรรทัด "- ชื่อ: ค่า" กลายเป็นช่องข้อมูลสรุป
 ```
 
-`type: grades` reads a Markdown table. The first row is the term names. A row named `GPA` draws the GPA chart.
+`type: grades` อ่านตาราง Markdown แถวแรกคือชื่อเทอม แถวที่ชื่อ `GPA` ใช้วาดกราฟ GPA
+ไฟล์ที่ชื่อขึ้นต้นด้วย `_` จะไม่ถูกนับ
 
-Files whose name starts with `_` are ignored.
+## เพิ่มรูป
 
-## Run locally
+อัปโหลดรูปเข้าโฟลเดอร์ `images/` แล้วใส่ `image: images/ชื่อไฟล์.jpg`
+ย่อรูปให้กว้างไม่เกิน 800px และไม่เกิน ~200 KB ก่อนอัปโหลด รูปใหญ่ทำให้มือถือค้าง
 
-Open `index.html`, or run `python3 -m http.server 8000`. Fonts need a network connection.
+## รันในเครื่อง
 
-## Deploy with GitHub Pages
+เปิด `index.html` ได้เลย หรือรัน `python3 -m http.server 8000` ต้องต่อเน็ตเพื่อโหลดฟอนต์
 
-Settings, then Pages. Source: `main`, `/ (root)`.
+## Deploy
+
+GitHub Pages: Settings > Pages > Source: `main`, `/ (root)`
