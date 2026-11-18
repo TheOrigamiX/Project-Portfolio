@@ -3,32 +3,42 @@
 import json, re
 from pathlib import Path
 
-SRC = Path(__file__).resolve().parent.parent / "content"
+HERE = Path(__file__).resolve().parent
+SRC = next((d for d in (HERE / "content", HERE.parent / "content") if d.is_dir()), HERE.parent / "content")
 
 def parse(path):
-    raw = path.read_text(encoding="utf-8").lstrip("\ufeff")
-    m = re.match(r"^---\s*\n(.*?)\n---\s*\n?(.*)$", raw, re.S)
+    raw = path.read_text(encoding="utf-8").lstrip("\ufeff").replace("\r", "")
+    m = re.match(r"^---[ \t]*\n(.*?)\n---[ \t]*\n?(.*)$", raw, re.S)
     head, body = (m.group(1), m.group(2)) if m else ("", raw)
     meta = {}
     for line in head.splitlines():
         if ":" in line and not line.strip().startswith("#"):
             k, v = line.split(":", 1)
             meta[k.strip().lower()] = v.strip().strip("\"'")
-    text, specs, rows = [], [], []
+    paras, cur, specs, rows = [], [], [], []
+    def flush():
+        nonlocal cur
+        if cur:
+            paras.append(" ".join(cur))
+        cur = []
     for line in body.splitlines():
         s = line.strip()
         if not s:
+            flush()
             continue
         if s.startswith("|"):
+            flush()
             cells = [c.strip() for c in s.strip("|").split("|")]
             if all(re.fullmatch(r":?-{2,}:?", c) for c in cells):
                 continue
             rows.append(cells)
         elif re.match(r"^[-*]\s+[^:]+:", s):
+            flush()
             k, v = s[1:].strip().split(":", 1)
             specs.append([k.strip(), v.strip()])
         else:
-            text.append(s)
+            cur.append(s)
+    flush()
     tape = {
         "type": meta.get("type", "work"),
         "title": meta.get("title", path.stem),
@@ -37,7 +47,7 @@ def parse(path):
         "tag": meta.get("tag", ""),
         "label": meta.get("label", ""),
         "image": meta.get("image", ""),
-        "text": " ".join(text),
+        "text": "\n\n".join(paras),
         "specs": specs,
     }
     if rows:
@@ -54,6 +64,6 @@ def parse(path):
 files = sorted(p for p in SRC.glob("*.md") if not p.name.startswith("_") and p.name.lower() != "readme.md")
 tapes = [parse(p) for p in files]
 (SRC / "tapes.js").write_text("window.TAPES = " + json.dumps(tapes, ensure_ascii=False, indent=1) + ";\n", encoding="utf-8")
-print(f"{len(tapes)} tapes -> content/tapes.js")
+print(f"{len(tapes)} tapes -> {SRC / 'tapes.js'}")
 for p in files:
     print("  ", p.name)
