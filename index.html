@@ -110,6 +110,12 @@ tfoot td{font-weight:600;color:var(--ac);border:0}
 .lite .in::before{background:linear-gradient(90deg,rgba(255,255,255,.4),transparent 14%,transparent 80%,rgba(0,0,0,.16))}
 .lite .cv{box-shadow:none}.lite img.art{mix-blend-mode:normal}
 #msg{position:fixed;inset:0;z-index:50;display:none;place-items:center;text-align:center;padding:24px;font:500 16px/1.7 var(--sans);color:var(--ac)}
+.lite .in::before{display:none}.lite .tape{will-change:transform}
+.dt{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;align-content:start}.pst{will-change:transform}
+.mq{grid-column:1/-1;overflow:hidden;white-space:nowrap;padding:14vh 0 10vh}
+.mq span{display:inline-block;font:700 min(30vw,300px)/1.1 "Noto Serif Thai",Georgia,serif;color:transparent;-webkit-text-stroke:1.5px var(--ac);will-change:transform}
+@media(min-width:768px){.pst{position:sticky;top:90px;align-self:start;height:78vh}}
+@media(max-width:767px){.dt{grid-auto-rows:max-content}}
 @media(prefers-reduced-motion:reduce){.bl,.cf i{animation:none}}
 </style>
 </head>
@@ -126,7 +132,7 @@ tfoot td{font-weight:600;color:var(--ac);border:0}
 <button class="ar b" id="nx" aria-label="ถัดไป"><svg width="24" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M19 1l5 5-5 5M24 6H1"/></svg></button>
 <div class="tl" id="tl"><div class="ln"></div><div class="dot" id="dot"></div></div>
 <div class="ft lbl"><span>© Nanthapop Nupradub (Boat)</span><span>Portfolio</span></div>
-<div class="dt" id="dt"><button class="cl lbl box" id="cl">Close / ปิด</button><div class="dbr lbl">Nanthapop Nupradub —— Portfolio</div><div class="lc" id="lc"></div><div class="pst" id="pst"></div></div>
+<div class="dt" id="dt"><button class="cl lbl box" id="cl">Close / ปิด</button><div class="dbr lbl">Nanthapop Nupradub —— Portfolio</div><div class="lc" id="lc"></div><div class="pst" id="pst"></div><div class="mq" id="mq"><span></span></div></div>
 <div class="cur" id="cur"><i class="rg"></i><i class="dp"></i><span class="ol">OPEN<br>เปิด</span></div>
 <div class="grain"></div>
 <div id="msg"></div>
@@ -142,7 +148,7 @@ text:String(r.text||"").split("\n\n").map(esc).join("<br><br>"),specs:(r.specs||
 grades:r.grades?{terms:(r.grades.terms||[]).map(esc),rows:(r.grades.rows||[]).map(x=>[esc(x[0]),x[1].map(v=>typeof v==="number"?v:esc(v))]),gpa:r.grades.gpa||[]}:null});
 function boot(RAW){
 const D=RAW.map((r,i)=>({t:r.title,e:r.en||"",j:r.jp||"",y:String(i+1).padStart(2,"0"),g:r.tag||"",k:{intro:0,grades:1,work:2}[r.type]??2,n:r.label||r.title,m:r.text||"",img:r.image||"",specs:r.specs||[],gr:r.grades||null}));
-const N=D.length,NM=Math.max(1,N-1),M=N*Math.max(3,Math.ceil(18/N)),P=1400,$=q=>document.querySelector(q);
+const N=D.length,NM=Math.max(1,N-1),M=N*Math.max(LITE?2:3,Math.ceil((LITE?10:18)/N)),P=1400,$=q=>document.querySelector(q);
 const sm=x=>x*x*(3-2*x),sg=Math.sign;
 const art=i=>{if(D[i].img)return`<img class="art" src="${D[i].img}" alt="" loading="lazy" decoding="async">`;const k=D[i].k;let b=`<circle cx="42" cy="${k==2?46:40}" r="${k==2?20:26}" fill="var(--a2)"/>`;
 if(k==1)b+=[30,38,44,52,60].map((h,n)=>`<rect x="${8+n*15}" y="${100-h}" width="11" height="${h}" fill="${n%2?"var(--a2)":"currentColor"}"/>`).join("");
@@ -216,25 +222,28 @@ $("#pv").onclick=()=>step(-1);$("#nx").onclick=()=>step(1);
 document.querySelectorAll("[data-go]").forEach(b=>{const i=D.findIndex(d=>d.k===+b.dataset.go);if(i<0)b.style.display="none";else b.onclick=()=>go(i)});
 $("#home").onclick=e=>{e.preventDefault();go(0)};
 tl.onclick=e=>{const r=tl.getBoundingClientRect();go(Math.round(Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*NM))};
-const shelf=$("#shelf");let dn=null,x0=0,t0=0,moved=false;
-shelf.addEventListener("pointerdown",e=>{if(open)return;dn=e.target.closest(".tape");x0=e.clientX;t0=tg;moved=false;drag=true;shelf.setPointerCapture(e.pointerId)});
-shelf.addEventListener("pointermove",e=>{if(drag){const dx=e.clientX-x0;if(Math.abs(dx)>5)moved=true;if(moved)tg=t0-dx/(ws+gap)}
+const shelf=$("#shelf");let dn=null,x0=0,t0=0,moved=false,lx=0,lt2=0,vx=0;
+shelf.addEventListener("pointerdown",e=>{if(open)return;dn=e.target.closest(".tape");x0=e.clientX;lx=x0;lt2=performance.now();vx=0;t0=tg;moved=false;drag=true;shelf.setPointerCapture(e.pointerId)});
+shelf.addEventListener("pointermove",e=>{if(drag){const dx=e.clientX-x0;if(Math.abs(dx)>5)moved=true;if(moved)tg=t0-dx/(ws+gap);const n=performance.now();if(n>lt2){vx=vx*.6+(e.clientX-lx)/(n-lt2)*.4;lx=e.clientX;lt2=n}}
 else{const t=e.target.closest(".tape");hov=t?tapes.indexOf(t):-1}});
 shelf.addEventListener("pointerleave",()=>{if(!drag)hov=-1});
 addEventListener("pointermove",e=>{mx=e.clientX;my=e.clientY;pt=e.target;poke()});addEventListener("pointerdown",poke);addEventListener("keydown",poke);addEventListener("wheel",poke,{passive:true});
-shelf.addEventListener("pointerup",()=>{if(!drag)return;drag=false;if(moved){tg=Math.round(tg);return}
+shelf.addEventListener("pointerup",()=>{if(!drag)return;drag=false;if(moved){tg=Math.round(tg-Math.max(-3,Math.min(3,vx*220/(ws+gap))));return}
 if(dn){const v=tapes.indexOf(dn),r=rel(v);if(Math.abs(r)<.5)openD();else tg=Math.round(tg+r)}});
 shelf.addEventListener("pointercancel",()=>{drag=false;tg=Math.round(tg)});
 let wt;shelf.addEventListener("wheel",e=>{if(open)return;e.preventDefault();const d=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;tg+=d/(ws+gap)*.5;clearTimeout(wt);wt=setTimeout(()=>tg=Math.round(tg),160)},{passive:false});
 addEventListener("keydown",e=>{if(e.key==="Escape"&&open)closeD();else if(open)return;
 else if(e.key==="ArrowLeft")step(-1);else if(e.key==="ArrowRight")step(1);else if(e.key==="Enter")openD()});
-const dt=$("#dt"),lc=$("#lc"),pst=$("#pst");let cir=[];
+const dt=$("#dt"),lc=$("#lc"),pst=$("#pst"),mqS=$("#mq span");let cir=[],sk=0;
+function sc(){sk=0;if(RM)return;const y=dt.scrollTop,p=y/Math.max(1,dt.scrollHeight-dt.clientHeight);pst.style.transform=`perspective(1200px) rotateY(${(p*36-12).toFixed(1)}deg) rotateX(${(4-p*8).toFixed(1)}deg)`;mqS.style.transform=`translate3d(${(-p*55).toFixed(1)}%,0,0)`}
+dt.addEventListener("scroll",()=>{if(!sk){sk=1;requestAnimationFrame(sc)}},{passive:true});
 function fill(i){const d=D[i],ln=h=>`<div class="ln2"><div>${h}</div></div>`;let x="";
 if(d.gr){const G=d.gr,gp=G.gpa||[],mn=Math.min(...gp),mx2=Math.max(...gp),pts=gp.map((g,n)=>`${10+n*(280/Math.max(1,gp.length-1))},${54-(g-mn)/((mx2-mn)||1)*44}`).join(" ");
 if(gp.length)x+=ln(`<div style="display:flex;align-items:center;gap:18px"><span class="big">${(gp.reduce((a,b)=>a+b,0)/gp.length).toFixed(2)}</span><span class="d2">GPAX</span><svg width="300" height="64" viewBox="0 0 300 64" style="margin-left:auto"><polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2"/>${pts.split(" ").map(p=>`<circle cx="${p.split(",")[0]}" cy="${p.split(",")[1]}" r="4" fill="var(--ac)"/>`).join("")}</svg></div>`);
 x+=ln(`<table><thead><tr><th>วิชา</th>${G.terms.map(n=>`<th>${n}</th>`).join("")}</tr></thead><tbody>${G.rows.map(r=>`<tr><td>${r[0]}</td>${r[1].map(g=>`<td${parseFloat(g)>=4?' class="hi"':""}>${g}</td>`).join("")}</tr>`).join("")}</tbody>${gp.length?`<tfoot><tr><td>GPA</td>${gp.map(g=>`<td>${g.toFixed(2)}</td>`).join("")}</tr></tfoot>`:""}</table>`)}
 if(d.specs.length)x+=ln(`<div class="spc">${d.specs.map(s=>`<div><small>${s[0]}</small><b>${s[1]}</b></div>`).join("")}</div>`);
 lc.innerHTML=ln(`<span class="lbl" style="color:var(--ac)">${d.e}${d.j?" / "+d.j:""}</span>`)+ln(`<h2 class="d1">${d.t}</h2>`)+ln(`<span class="d2">${d.y} / ${d.g}</span>`)+ln(`<p class="d3">${d.m}</p>`)+x+ln(`<span class="d4">Written and directed by Nanthapop Nupradub</span>`);
+mqS.innerHTML=(d.t+" · ").repeat(3);
 const C=[[150,330,0],[340,600,120],[250,120,220],[90,760,300],[400,250,360],[260,860,420],[230,470,180]];
 pst.innerHTML=`<div class="in ${pal(i)}" style="border-radius:0">${cover(i)}</div>${LITE?"":`<svg viewBox="0 0 474 900" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%"><defs><filter id="ik" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1100" height="1500"><feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="120" xChannelSelector="R" yChannelSelector="G"/></filter><mask id="mk" maskUnits="userSpaceOnUse" x="0" y="0" width="474" height="900"><rect width="474" height="900" fill="#fff"/><g filter="url(#ik)" fill="#000">${C.map(c=>`<circle cx="${c[0]}" cy="${c[1]}" r="0"/>`).join("")}</g></mask></defs><rect width="474" height="900" style="fill:var(--sheet)" mask="url(#mk)"/></svg>`}`;
 cir=[...pst.querySelectorAll("mask g circle")].map((c,n)=>({c,dl:C[n][2]}))}
@@ -244,7 +253,7 @@ function openD(){if(open)return;poke();s=tg=Math.round(tg);render(0);const i=((M
 const from=rect();dt.style.display="grid";
 dt.animate([{clipPath:from},{clipPath:"inset(0 round 0)"}],{duration:RM?1:1050,easing:"cubic-bezier(.76,0,.18,1)",fill:"both"});
 dt.querySelectorAll(".ln2>*").forEach((n,k)=>n.animate([{transform:"translateY(110%)"},{transform:"none"}],{duration:RM?1:900,delay:RM?0:620+k*75,easing:E,fill:"both"}));
-if(RM)cir.forEach(o=>o.c.setAttribute("r",720));else ink(performance.now());dt.scrollTop=0}
+if(RM)cir.forEach(o=>o.c.setAttribute("r",720));else ink(performance.now());dt.scrollTop=0;sc()}
 function closeD(){if(!open)return;poke();open=false;dt.getAnimations().forEach(a=>a.cancel());
 const a=dt.animate([{clipPath:"inset(0 round 0)"},{clipPath:rect()}],{duration:RM?1:850,easing:"cubic-bezier(.76,0,.18,1)",fill:"both"});
 a.onfinish=()=>{dt.style.display="none";dt.getAnimations().forEach(x=>x.cancel())}}
