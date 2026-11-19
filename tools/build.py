@@ -47,6 +47,7 @@ def parse(path):
         "tag": meta.get("tag", ""),
         "label": meta.get("label", ""),
         "image": meta.get("image", ""),
+        "sound": meta.get("sound", ""),
         "text": "\n\n".join(paras),
         "specs": specs,
     }
