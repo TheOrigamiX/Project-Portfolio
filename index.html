@@ -205,7 +205,7 @@ html[data-q="0"] :is(.ch,td,.spc>div){animation:none}html[data-q="0"] .gl2{anima
 <div class="cur" id="cur"><i class="rg"></i><i class="dp"></i><span class="ol">OPEN<br>เปิด</span></div>
 <div class="grain"></div>
 <div class="scan"></div><div id="msg"></div>
-<script src="content/tapes.js"></script>
+<script>document.write('<script src="content/tapes.js?'+Date.now()+'"><\/script>')</script>
 <script src="audio.js"></script>
 <script>
 const E="cubic-bezier(.2,.8,.2,1)",RM0=matchMedia("(prefers-reduced-motion:reduce)").matches;let RM=RM0;
@@ -370,7 +370,19 @@ $("#cl").onclick=closeD;
 measure();addEventListener("resize",()=>{measure();poke()});
 setInterval(()=>{if(S.auto&&!open&&!drag&&!panelOpen){poke();tg=Math.round(tg)+1}},4500);
 requestAnimationFrame(loop)}
-if(window.TAPES&&window.TAPES.length)boot(window.TAPES.map(clean));
+const isNum=v=>/^\d+(\.\d+)?$/.test(v);
+function parseMd(raw){raw=raw.replace(/^\ufeff/,"").replace(/\r/g,"");const m=raw.match(/^---[ \t]*\n([\s\S]*?)\n---[ \t]*\n?([\s\S]*)$/),head=m?m[1]:"",body=m?m[2]:raw,meta={};
+head.split("\n").forEach(l=>{const i=l.indexOf(":");if(i>0&&!l.trim().startsWith("#"))meta[l.slice(0,i).trim().toLowerCase()]=l.slice(i+1).trim().replace(/^["']|["']$/g,"")});
+const paras=[],specs=[],rows=[];let cur=[];const fl=()=>{if(cur.length)paras.push(cur.join(" "));cur=[]};
+for(const ln of body.split("\n")){const s=ln.trim();if(!s){fl();continue}
+if(s[0]==="|"){fl();const c=s.replace(/^\||\|$/g,"").split("|").map(z=>z.trim());if(!c.every(z=>/^:?-{2,}:?$/.test(z)))rows.push(c);continue}
+const sp=s.match(/^[-*]\s+([^:]+):\s*(.*)$/);if(sp){fl();specs.push([sp[1].trim(),sp[2].trim()]);continue}cur.push(s)}fl();
+const o={type:meta.type||"work",en:meta.en||"",jp:meta.jp||"",tag:meta.tag||"",label:meta.label||"",image:meta.image||"",sound:meta.sound||"",text:paras.join("\n\n"),specs};if(meta.title)o.title=meta.title;
+if(rows.length>1){let gpa=[];const subj=[];for(const r of rows.slice(1)){const v=r.slice(1);if(r[0].toLowerCase()==="gpa")gpa=v.filter(isNum).map(parseFloat);else subj.push([r[0],v.map(x=>isNum(x)?parseFloat(x):x)])}o.grades={terms:rows[0].slice(1),rows:subj,gpa}}
+return o}
+// อ่านไฟล์ .md สดทุกครั้งที่เปิดเว็บ (ไม่ต้องรอ GitHub Action) ถ้าอ่านไม่ได้ใช้ข้อมูลใน tapes.js แทน
+const live=T=>Promise.all(T.map(t=>t.file?fetch("content/"+encodeURIComponent(t.file)+"?t="+Date.now(),{cache:"no-store"}).then(x=>x.ok?x.text():null).catch(()=>null):null)).then(r=>T.map((t,i)=>r[i]?{...t,...parseMd(r[i])}:t));
+if(window.TAPES&&window.TAPES.length){const T=window.TAPES;Promise.race([live(T),new Promise(r=>setTimeout(()=>r(T),2500))]).catch(()=>T).then(x=>boot(x.map(clean)))}
 else showMsg("ไม่พบเทป<br>ตรวจว่ามีไฟล์ content/tapes.js และมีไฟล์ .md ใน content/");
 </script>
 </body>
