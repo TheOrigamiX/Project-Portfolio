@@ -40,6 +40,7 @@ def parse(path):
             cur.append(s)
     flush()
     tape = {
+        "file": path.name,
         "type": meta.get("type", "work"),
         "title": meta.get("title", path.stem),
         "en": meta.get("en", ""),
