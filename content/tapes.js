@@ -1,5 +1,6 @@
 window.TAPES = [
  {
+  "file": "01-intro.md",
   "type": "intro",
   "title": "แนะนำตัว",
   "en": "Introduction",
@@ -7,10 +8,12 @@ window.TAPES = [
   "tag": "Profile",
   "label": "Intro",
   "image": "",
+  "sound": "",
   "text": "สวัสดีครับ ผมชื่อ Nanthapop Nupradub (Boat) สนใจเข้าคณะวิศวกรรมคอมพิวเตอร์ นี่คือผลงานที่ผมอยากนำเสนอ\n\n(ข้อความตัวอย่าง แก้ได้เลย)",
   "specs": []
  },
  {
+  "file": "02-grades.md",
   "type": "grades",
   "title": "ผลการเรียน",
   "en": "Transcript",
@@ -18,6 +21,7 @@ window.TAPES = [
   "tag": "Grades",
   "label": "Grades",
   "image": "",
+  "sound": "",
   "text": "ผลการเรียน 5 ภาคเรียน ช่องสีเขียวคือวิชาที่ได้ 4 (ตัวเลขตัวอย่าง ใส่ข้อมูลจริงทีหลัง)",
   "specs": [],
   "grades": {
@@ -90,6 +94,7 @@ window.TAPES = [
   }
  },
  {
+  "file": "03-plane-1.md",
   "type": "work",
   "title": "ผลงานที่ 1",
   "en": "Project 1",
@@ -97,6 +102,7 @@ window.TAPES = [
   "tag": "Work",
   "label": "Work 1",
   "image": "",
+  "sound": "",
   "text": "คำอธิบายผลงานชิ้นที่ 1 (ข้อความตัวอย่าง) เล่าว่าทำอะไร ทำไมถึงทำ และได้อะไรกลับมา",
   "specs": [
    [
@@ -118,6 +124,7 @@ window.TAPES = [
   ]
  },
  {
+  "file": "04-plane-2.md",
   "type": "work",
   "title": "ผลงานที่ 2",
   "en": "Project 2",
@@ -125,6 +132,7 @@ window.TAPES = [
   "tag": "Work",
   "label": "Work 2",
   "image": "",
+  "sound": "",
   "text": "คำอธิบายผลงานชิ้นที่ 2 (ข้อความตัวอย่าง) เล่าว่าทำอะไร ทำไมถึงทำ และได้อะไรกลับมา",
   "specs": [
    [
@@ -146,6 +154,7 @@ window.TAPES = [
   ]
  },
  {
+  "file": "05-plane-3.md",
   "type": "work",
   "title": "ผลงานที่ 3",
   "en": "Project 3",
@@ -153,6 +162,7 @@ window.TAPES = [
   "tag": "Work",
   "label": "Work 3",
   "image": "",
+  "sound": "",
   "text": "คำอธิบายผลงานชิ้นที่ 3 (ข้อความตัวอย่าง) เล่าว่าทำอะไร ทำไมถึงทำ และได้อะไรกลับมา",
   "specs": [
    [
@@ -174,6 +184,7 @@ window.TAPES = [
   ]
  },
  {
+  "file": "06-plane-4.md",
   "type": "work",
   "title": "ผลงานที่ 4",
   "en": "Project 4",
@@ -181,6 +192,7 @@ window.TAPES = [
   "tag": "Work",
   "label": "Work 4",
   "image": "",
+  "sound": "",
   "text": "คำอธิบายผลงานชิ้นที่ 4 (ข้อความตัวอย่าง) เล่าว่าทำอะไร ทำไมถึงทำ และได้อะไรกลับมา",
   "specs": [
    [
